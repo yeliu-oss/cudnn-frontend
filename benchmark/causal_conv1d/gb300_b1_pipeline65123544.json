@@ -1,0 +1,149 @@
+{
+  "environment": {
+    "attention_gym_sha": "f61ee082ac34b433c386b0980604cd03972f3be3",
+    "backend_artifact_sha": "dea9bcdeb26048112aa16811d39e4038400d244b",
+    "backend_pipeline": 65123544,
+    "backend_sha": "b068acb86de2967fa75886e8f64c0f29051419c4",
+    "compute_capability": [
+      10,
+      3
+    ],
+    "cudagym": "1.8.3",
+    "cudnn_backend_version": "92700",
+    "cutlass_dsl": "4.5.2",
+    "frontend_sha": "b2855e7e645041d7d25df3df18f80174fee8df79",
+    "gpu": "NVIDIA GB300",
+    "nvidia_smi_before_benchmark": {
+      "clocks.applications.graphics": "2070",
+      "clocks.applications.memory": "3996",
+      "clocks.current.graphics": "1972",
+      "clocks.current.memory": "3996",
+      "clocks.max.graphics": "2070",
+      "clocks.max.memory": "3996",
+      "driver_version": "580.159.04",
+      "index": "0",
+      "pci.bus_id": "00000008:06:00.0",
+      "persistence_mode": "Enabled",
+      "power.limit": "1400.00",
+      "uuid": "GPU-c1a859db-0605-ad39-6011-555f8637ff90"
+    },
+    "requested_graphics_clock_lock_mhz": 1972,
+    "torch": "2.12.0+cu132",
+    "torch_cuda": "13.2"
+  },
+  "methodology": {
+    "backward": "direct registered backward custom ops, including all kernels and reductions; cuDNN additionally computes dBias while attention-gym returns dX and dWeight",
+    "bias": "preallocated zeros so both implementations compute the same operation",
+    "iterations": 50,
+    "requested_timer": "cudagym",
+    "warmup": 10
+  },
+  "results": [
+    {
+      "activation": "silu",
+      "cross_implementation_max_abs": {
+        "dw_max_abs": 0.0078125,
+        "dx_max_abs": 0.0009765625,
+        "forward_max_abs": 0.0009765625
+      },
+      "dtype": "bfloat16",
+      "kernels": {
+        "attention_gym_bwd": [
+          "short_conv_dw_bf16_b1_t16384_c12288_w4_th128_bt128_v4_kernel_cutlass_kernel_attn_gymlinearkdashort_convcuteCausalConv1dSiluWeightGradientPartials_object_at__tensorptrbf16gmemalign16o1638412288122881_tensorptrbf16gmemalign16o12288441_tensorpt_0",
+          "short_conv_dx_bf16_b1_t16384_c12288_w4_th128_bt10_v4_kernel_cutlass_kernel_attn_gymlinearkdashort_convcuteCausalConv1dSiluInputGradient_object_at__tensorptrbf16gmemalign16o1638412288122881_tensorptrbf16gmemalign16o12288441_tensorptrbf16gmem_0",
+          "void at::native::reduce_kernel<128, 4, at::native::ReduceOp<float, at::native::func_wrapper_t<float, at::native::sum_functor<float, float, float>::operator()(at::TensorIterator&)::{lambda(float, float)#1}>, unsigned int, float, 4, 4> >(at::native::ReduceOp<float, at::native::func_wrapper_t<float, at::native::sum_functor<float, float, float>::operator()(at::TensorIterator&)::{lambda(float, float)#1}>, unsigned int, float, 4, 4>)",
+          "void at::native::vectorized_elementwise_kernel<8, at::native::bfloat16_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda(float)#1}, std::array<char*, 2ul> >(int, at::native::bfloat16_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda(float)#1}, std::array<char*, 2ul>)"
+        ],
+        "attention_gym_fwd": [
+          "short_conv_fwd_bf16_b1_t16384_c12288_w4_th128_bt8_v4_kernel_cutlass_kernel_attn_gymlinearkdashort_convcuteCausalConv1dSiluForward_object_at__tensorptrbf16gmemalign16o1638412288122881_tensorptrbf16gmemalign16o12288441_tensorptrbf16gmemalign1_0"
+        ],
+        "cudnn_bwd": [
+          "cudnn_causal_conv1d_nwh_bwd_sp_k4_silu_cutlass__bfloat16_t_e32x2y64",
+          "void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<float>, std::array<char*, 1ul> >(int, at::native::FillFunctor<float>, std::array<char*, 1ul>)",
+          "void at::native::vectorized_elementwise_kernel<8, at::native::bfloat16_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda(float)#1}, std::array<char*, 2ul> >(int, at::native::bfloat16_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda(float)#1}, std::array<char*, 2ul>)"
+        ],
+        "cudnn_fwd": [
+          "cudnn_causal_conv1d_nwh_fwd_sp_k4_silu_cutlass__bfloat16_t_e32x2y64v8"
+        ]
+      },
+      "layout": "NWH/channel-last",
+      "shape": {
+        "batch": 1,
+        "channels": 12288,
+        "tokens": 16384,
+        "width": 4
+      },
+      "speedup_attention_over_cudnn": {
+        "bwd_mean": 1.2180945029217631,
+        "fwd_mean": 0.9837351571955182
+      },
+      "timer": "cudagym_cuda_events_cold_l2_shifting_inputs",
+      "timings": {
+        "attention_gym_bwd": {
+          "gpu_telemetry": {
+            "clock_mhz": 1972.0,
+            "clock_mhz_stdev": 0.0,
+            "num_samples": 20,
+            "power_w": 227.323,
+            "power_w_stdev": 0.0,
+            "temperature_c": 30.0,
+            "temperature_c_stdev": 0.0
+          },
+          "max_us": 807.9360127449036,
+          "mean_us": 528.4838449954987,
+          "median_us": 522.7679908275604,
+          "min_us": 518.4640288352966,
+          "p20_us": 520.6080079078674
+        },
+        "attention_gym_fwd": {
+          "gpu_telemetry": {
+            "clock_mhz": 1972.0,
+            "clock_mhz_stdev": 0.0,
+            "num_samples": 7,
+            "power_w": 227.174,
+            "power_w_stdev": 0.0,
+            "temperature_c": 30.0,
+            "temperature_c_stdev": 0.0
+          },
+          "max_us": 443.9679980278015,
+          "mean_us": 132.8095981478691,
+          "median_us": 123.90399724245071,
+          "min_us": 123.3920007944107,
+          "p20_us": 123.87199699878693
+        },
+        "cudnn_bwd": {
+          "gpu_telemetry": {
+            "clock_mhz": 1972.0,
+            "clock_mhz_stdev": 0.0,
+            "num_samples": 18,
+            "power_w": 227.174,
+            "power_w_stdev": 0.0,
+            "temperature_c": 30.0,
+            "temperature_c_stdev": 0.0
+          },
+          "max_us": 627.3279786109924,
+          "mean_us": 433.86111974716187,
+          "median_us": 430.11200428009033,
+          "min_us": 426.2720048427582,
+          "p20_us": 428.76800894737244
+        },
+        "cudnn_fwd": {
+          "gpu_telemetry": {
+            "clock_mhz": 1972.0,
+            "clock_mhz_stdev": 0.0,
+            "num_samples": 7,
+            "power_w": 227.323,
+            "power_w_stdev": 0.0,
+            "temperature_c": 30.0,
+            "temperature_c_stdev": 0.0
+          },
+          "max_us": 306.7840039730072,
+          "mean_us": 135.00544041395187,
+          "median_us": 130.8479979634285,
+          "min_us": 129.02399897575378,
+          "p20_us": 130.048006772995
+        }
+      }
+    }
+  ]
+}

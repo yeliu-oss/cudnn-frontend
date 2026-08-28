@@ -1,0 +1,304 @@
+{
+  "environment": {
+    "attention_gym_sha": "f61ee082ac34b433c386b0980604cd03972f3be3",
+    "backend_artifact_sha": "dea9bcdeb26048112aa16811d39e4038400d244b",
+    "backend_pipeline": 65123544,
+    "backend_sha": "b068acb86de2967fa75886e8f64c0f29051419c4",
+    "compute_capability": [
+      10,
+      3
+    ],
+    "cudagym": "1.8.3",
+    "cudnn_backend_version": "92700",
+    "cutlass_dsl": "4.5.2",
+    "frontend_sha": "b2855e7e645041d7d25df3df18f80174fee8df79",
+    "gpu": "NVIDIA GB300",
+    "nvidia_smi_before_benchmark": {
+      "clocks.applications.graphics": "2070",
+      "clocks.applications.memory": "3996",
+      "clocks.current.graphics": "1972",
+      "clocks.current.memory": "3996",
+      "clocks.max.graphics": "2070",
+      "clocks.max.memory": "3996",
+      "driver_version": "580.159.04",
+      "index": "0",
+      "pci.bus_id": "00000008:06:00.0",
+      "persistence_mode": "Enabled",
+      "power.limit": "1400.00",
+      "uuid": "GPU-c1a859db-0605-ad39-6011-555f8637ff90"
+    },
+    "requested_graphics_clock_lock_mhz": 1972,
+    "torch": "2.12.0+cu132",
+    "torch_cuda": "13.2"
+  },
+  "methodology": {
+    "backward": "direct registered backward custom ops, including all kernels and reductions; cuDNN additionally computes dBias while attention-gym returns dX and dWeight",
+    "bias": "preallocated zeros so both implementations compute the same operation",
+    "iterations": 50,
+    "requested_timer": "cudagym",
+    "warmup": 10
+  },
+  "results": [
+    {
+      "activation": "silu",
+      "cross_implementation_max_abs": {
+        "dw_max_abs": 0.015625,
+        "dx_max_abs": 0.0009765625,
+        "forward_max_abs": 0.0009765625
+      },
+      "dtype": "bfloat16",
+      "layout": "NWH/channel-last",
+      "shape": {
+        "batch": 2,
+        "channels": 12288,
+        "tokens": 8192,
+        "width": 4
+      },
+      "speedup_attention_over_cudnn": {
+        "bwd_mean": 1.2312065850535283,
+        "fwd_mean": 0.9739774897940866
+      },
+      "timer": "cudagym_cuda_events_cold_l2_shifting_inputs",
+      "timings": {
+        "attention_gym_bwd": {
+          "gpu_telemetry": {
+            "clock_mhz": 1972.0,
+            "clock_mhz_stdev": 0.0,
+            "num_samples": 20,
+            "power_w": 255.90238888888888,
+            "power_w_stdev": 117.83583910449263,
+            "temperature_c": 30.11111111111111,
+            "temperature_c_stdev": 0.4581228472908512
+          },
+          "max_us": 806.6880106925964,
+          "mean_us": 533.5564756393433,
+          "median_us": 528.3839702606201,
+          "min_us": 525.6959795951843,
+          "p20_us": 526.4000296592712
+        },
+        "attention_gym_fwd": {
+          "gpu_telemetry": {
+            "clock_mhz": 1972.0,
+            "clock_mhz_stdev": 0.0,
+            "num_samples": 7,
+            "power_w": 227.323,
+            "power_w_stdev": 0.0,
+            "temperature_c": 30.0,
+            "temperature_c_stdev": 0.0
+          },
+          "max_us": 422.2080111503601,
+          "mean_us": 130.76543927192688,
+          "median_us": 124.92799758911133,
+          "min_us": 123.45600128173828,
+          "p20_us": 123.83999675512314
+        },
+        "cudnn_bwd": {
+          "gpu_telemetry": {
+            "clock_mhz": 1972.0,
+            "clock_mhz_stdev": 0.0,
+            "num_samples": 18,
+            "power_w": 227.174,
+            "power_w_stdev": 0.0,
+            "temperature_c": 30.0,
+            "temperature_c_stdev": 0.0
+          },
+          "max_us": 633.1520080566406,
+          "mean_us": 433.3606415987015,
+          "median_us": 429.07199263572693,
+          "min_us": 426.36799812316895,
+          "p20_us": 428.0959963798523
+        },
+        "cudnn_fwd": {
+          "gpu_telemetry": {
+            "clock_mhz": 1972.0,
+            "clock_mhz_stdev": 0.0,
+            "num_samples": 7,
+            "power_w": 227.174,
+            "power_w_stdev": 0.0,
+            "temperature_c": 30.0,
+            "temperature_c_stdev": 0.0
+          },
+          "max_us": 285.15198826789856,
+          "mean_us": 134.25920069217682,
+          "median_us": 131.0880035161972,
+          "min_us": 129.02399897575378,
+          "p20_us": 130.048006772995
+        }
+      }
+    },
+    {
+      "activation": "silu",
+      "cross_implementation_max_abs": {
+        "dw_max_abs": 0.03125,
+        "dx_max_abs": 0.0009765625,
+        "forward_max_abs": 0.0009765625
+      },
+      "dtype": "bfloat16",
+      "layout": "NWH/channel-last",
+      "shape": {
+        "batch": 4,
+        "channels": 12288,
+        "tokens": 4096,
+        "width": 4
+      },
+      "speedup_attention_over_cudnn": {
+        "bwd_mean": 1.24982022938047,
+        "fwd_mean": 0.9821952933299997
+      },
+      "timer": "cudagym_cuda_events_cold_l2_shifting_inputs",
+      "timings": {
+        "attention_gym_bwd": {
+          "gpu_telemetry": {
+            "clock_mhz": 1972.0,
+            "clock_mhz_stdev": 0.0,
+            "num_samples": 20,
+            "power_w": 227.174,
+            "power_w_stdev": 0.0,
+            "temperature_c": 30.0,
+            "temperature_c_stdev": 0.0
+          },
+          "max_us": 789.3120050430298,
+          "mean_us": 540.6086421012878,
+          "median_us": 535.2640151977539,
+          "min_us": 531.4559936523438,
+          "p20_us": 534.1439843177795
+        },
+        "attention_gym_fwd": {
+          "gpu_telemetry": {
+            "clock_mhz": 1972.0,
+            "clock_mhz_stdev": 0.0,
+            "num_samples": 7,
+            "power_w": 227.174,
+            "power_w_stdev": 0.0,
+            "temperature_c": 30.0,
+            "temperature_c_stdev": 0.0
+          },
+          "max_us": 404.03199195861816,
+          "mean_us": 131.40735894441605,
+          "median_us": 125.10399892926216,
+          "min_us": 123.83999675512314,
+          "p20_us": 123.99999797344208
+        },
+        "cudnn_bwd": {
+          "gpu_telemetry": {
+            "clock_mhz": 1972.0,
+            "clock_mhz_stdev": 0.0,
+            "num_samples": 18,
+            "power_w": 307.09576470588235,
+            "power_w_stdev": 172.65074440599622,
+            "temperature_c": 30.0,
+            "temperature_c_stdev": 0.0
+          },
+          "max_us": 594.6879982948303,
+          "mean_us": 432.5491213798523,
+          "median_us": 428.9119988679886,
+          "min_us": 427.0080029964447,
+          "p20_us": 428.41601371765137
+        },
+        "cudnn_fwd": {
+          "gpu_telemetry": {
+            "clock_mhz": 1972.0,
+            "clock_mhz_stdev": 0.0,
+            "num_samples": 7,
+            "power_w": 227.174,
+            "power_w_stdev": 0.0,
+            "temperature_c": 30.0,
+            "temperature_c_stdev": 0.0
+          },
+          "max_us": 265.855997800827,
+          "mean_us": 133.7894406914711,
+          "median_us": 131.03999942541122,
+          "min_us": 128.9599984884262,
+          "p20_us": 130.0799995660782
+        }
+      }
+    },
+    {
+      "activation": "silu",
+      "cross_implementation_max_abs": {
+        "dw_max_abs": 0.0078125,
+        "dx_max_abs": 0.0009765625,
+        "forward_max_abs": 0.0009765625
+      },
+      "dtype": "bfloat16",
+      "layout": "NWH/channel-last",
+      "shape": {
+        "batch": 8,
+        "channels": 12288,
+        "tokens": 2048,
+        "width": 4
+      },
+      "speedup_attention_over_cudnn": {
+        "bwd_mean": 1.2459406036654062,
+        "fwd_mean": 0.9866968644781241
+      },
+      "timer": "cudagym_cuda_events_cold_l2_shifting_inputs",
+      "timings": {
+        "attention_gym_bwd": {
+          "gpu_telemetry": {
+            "clock_mhz": 1972.0,
+            "clock_mhz_stdev": 0.0,
+            "num_samples": 20,
+            "power_w": 227.323,
+            "power_w_stdev": 0.0,
+            "temperature_c": 30.0,
+            "temperature_c_stdev": 0.0
+          },
+          "max_us": 821.2800025939941,
+          "mean_us": 541.0771203041077,
+          "median_us": 534.9279940128326,
+          "min_us": 531.1040282249451,
+          "p20_us": 533.8240265846252
+        },
+        "attention_gym_fwd": {
+          "gpu_telemetry": {
+            "clock_mhz": 1972.0,
+            "clock_mhz_stdev": 0.0,
+            "num_samples": 7,
+            "power_w": 227.174,
+            "power_w_stdev": 0.0,
+            "temperature_c": 30.0,
+            "temperature_c_stdev": 0.0
+          },
+          "max_us": 439.58398699760437,
+          "mean_us": 131.86879932880402,
+          "median_us": 124.92799758911133,
+          "min_us": 123.83999675512314,
+          "p20_us": 123.96799772977829
+        },
+        "cudnn_bwd": {
+          "gpu_telemetry": {
+            "clock_mhz": 1972.0,
+            "clock_mhz_stdev": 0.0,
+            "num_samples": 18,
+            "power_w": 227.323,
+            "power_w_stdev": 0.0,
+            "temperature_c": 30.0,
+            "temperature_c_stdev": 0.0
+          },
+          "max_us": 621.1519837379456,
+          "mean_us": 434.27200198173523,
+          "median_us": 430.83199858665466,
+          "min_us": 426.91200971603394,
+          "p20_us": 429.0879964828491
+        },
+        "cudnn_fwd": {
+          "gpu_telemetry": {
+            "clock_mhz": 1972.0,
+            "clock_mhz_stdev": 0.0,
+            "num_samples": 7,
+            "power_w": 227.174,
+            "power_w_stdev": 0.0,
+            "temperature_c": 30.0,
+            "temperature_c_stdev": 0.0
+          },
+          "max_us": 261.75999641418457,
+          "mean_us": 133.64671975374222,
+          "median_us": 131.071999669075,
+          "min_us": 128.92800569534302,
+          "p20_us": 130.048006772995
+        }
+      }
+    }
+  ]
+}
